@@ -11,11 +11,11 @@ import os
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = FastAPI()
+app = FastAPI(title="Qwen Web API", description="API for Qwen model inference")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["*"], 
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -33,6 +33,7 @@ async def init_model():
         try:
             model, tokenizer = load_model()
             model_error = None
+            logger.info("Model loaded successfully")
         except Exception as e:
             model_error = str(e)
             logger.error(f"Failed to load model: {model_error}")
@@ -41,7 +42,16 @@ async def init_model():
 
 @app.on_event("startup")
 async def startup_event():
+    logger.info("Starting up API server...")
     asyncio.create_task(init_model())
+
+@app.get("/")
+async def root():
+    return {
+        "status": "online",
+        "service": "Qwen Web API",
+        "version": "1.0.0"
+    }
 
 async def stream_response(query: str) -> AsyncGenerator[str, None]:
     global model, tokenizer, model_loading, model_error
@@ -109,4 +119,6 @@ async def health_check():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=int(os.getenv("PORT", "8000"))) 
+    port = int(os.getenv("PORT", "10000")) 
+    logger.info(f"Starting server on port {port}")
+    uvicorn.run(app, host="0.0.0.0", port=port) 
