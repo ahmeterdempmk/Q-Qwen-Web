@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: qwen-web-api
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python app.py
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9.0
+      - key: PORT
+        value: 10000
+    plan: free
+    autoDeploy: true 
