@@ -7,6 +7,10 @@
   --border-color: #e5e5e5;
   --primary: #1a7fed;
   --primary-hover: #0c64c0;
+  --sidebar-bg: #171717;
+  --sidebar-hover: #2D2D2D;
+  --sidebar-text: #ededed;
+  --sidebar-muted: #6b7280;
 }
 
 @theme inline {
@@ -24,6 +28,10 @@
     --border-color: #2e2e2e;
     --primary: #2d8cf0;
     --primary-hover: #1a7fed;
+    --sidebar-bg: #070707;
+    --sidebar-hover: #2D2D2D;
+    --sidebar-text: #ededed;
+    --sidebar-muted: #6b7280;
   }
 }
 
@@ -60,4 +68,128 @@ body {
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background-color: rgba(155, 155, 155, 0.7);
+}
+
+/* Markdown styling */
+.markdown-content {
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+
+/* Special styling for numbered steps */
+.markdown-step {
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  display: block;
+}
+
+.markdown-step + .markdown-step {
+  margin-top: 1.5rem;
+}
+
+.markdown-step .step-number {
+  font-weight: 600;
+  margin-right: 0.25rem;
+}
+
+.markdown-content h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-top: 1.75rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid rgba(125, 125, 125, 0.3);
+}
+
+.markdown-content h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.25rem;
+}
+
+.markdown-content h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-top: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.markdown-content p {
+  margin-top: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.markdown-content ul, .markdown-content ol {
+  margin-top: 0.5rem;
+  margin-bottom: 1.25rem;
+  margin-left: 2rem;
+}
+
+.markdown-content ul {
+  list-style-type: disc;
+}
+
+.markdown-content ol {
+  list-style-type: decimal;
+}
+
+.markdown-content li {
+  margin-bottom: 0.5rem;
+}
+
+.markdown-content .markdown-list {
+  margin-bottom: 1.5rem;
+}
+
+.markdown-content pre {
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 0.375rem;
+  padding: 0.75rem;
+  margin-top: 0.75rem;
+  margin-bottom: 1.25rem;
+  overflow-x: auto;
+}
+
+.markdown-content code {
+  font-family: monospace;
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+}
+
+.markdown-content pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+.markdown-content blockquote {
+  border-left: 3px solid #718096;
+  padding: 0.5rem 0 0.5rem 1rem;
+  margin: 1rem 0 1.5rem 0;
+  font-style: italic;
+  background-color: rgba(0, 0, 0, 0.02);
+  border-radius: 0 0.25rem 0.25rem 0;
+}
+
+.markdown-content a {
+  color: #3182ce;
+  text-decoration: underline;
+}
+
+.markdown-content table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0 1.5rem 0;
+}
+
+.markdown-content table th,
+.markdown-content table td {
+  border: 1px solid #e2e8f0;
+  padding: 0.5rem;
+}
+
+.markdown-content table th {
+  background-color: rgba(0, 0, 0, 0.05);
 }

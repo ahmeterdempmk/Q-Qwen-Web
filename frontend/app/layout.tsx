@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Sidebar from "./components/Sidebar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Quantum Assistant",
-  description: "AI-powered chatbot for quantum computing topics",
+  title: "Q-Qwen",
+  description: "Your chatbot for quantum computing problems",
 };
 
 export default function RootLayout({
@@ -25,9 +26,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[var(--background)]`}
       >
-        {children}
+        <div className="flex h-screen overflow-hidden">
+          {/* Sidebar */}
+          <div className="h-full flex-none">
+            <Sidebar />
+          </div>
+          {/* Main content area */}
+          <div className="flex-grow h-full overflow-hidden">
+            {children}
+          </div>
+        </div>
       </body>
     </html>
   );

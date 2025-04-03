@@ -11,6 +11,14 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Ensure state is reset when component mounts
+  useEffect(() => {
+    // Clear any existing messages when starting a new chat
+    setMessages([]);
+    setError(null);
+    setIsLoading(false);
+  }, []);
+
   const addMessage = (content: string, role: 'user' | 'assistant') => {
     const newMessage: MessageType = {
       id: uuidv4(),
@@ -24,6 +32,9 @@ export default function Home() {
 
   const handleSendMessage = async (content: string) => {
     if (!content.trim()) return;
+    
+    // Generate a chat ID for this new conversation
+    const chatId = uuidv4();
     
     // Add user message
     addMessage(content, 'user');
@@ -40,6 +51,7 @@ export default function Home() {
         { id: assistantMsgId, role: 'assistant', content: '', timestamp: new Date() },
       ]);
       
+      // Send request to backend API
       const response = await fetch('http://localhost:8000/api/chat', {
         method: 'POST',
         headers: {
@@ -59,7 +71,10 @@ export default function Home() {
       
       while (true) {
         const { done, value } = await reader.read();
-        if (done) break;
+        if (done) {
+          setIsLoading(false);
+          break;
+        }
         
         const chunk = new TextDecoder().decode(value);
         const lines = chunk.split('\n\n');
@@ -67,7 +82,10 @@ export default function Home() {
         for (const line of lines) {
           if (line.startsWith('data:')) {
             const data = line.substring(5).trim();
-            if (data === '[DONE]') continue;
+            if (data === '[DONE]') {
+              setIsLoading(false);
+              continue;
+            }
             
             try {
               const parsed = JSON.parse(data);
@@ -79,6 +97,7 @@ export default function Home() {
                     msg.id === assistantMsgId ? { ...msg, content: `Error: ${parsed.error}` } : msg
                   )
                 );
+                setIsLoading(false);
                 break;
               }
               
@@ -96,6 +115,44 @@ export default function Home() {
           }
         }
       }
+      
+      // Save chat to localStorage after successful response
+      if (fullText) {
+        // Save this chat to localStorage
+        const chatTitle = content.length > 30 ? content.substring(0, 30) + '...' : content;
+        const newChat = {
+          id: chatId,
+          title: chatTitle,
+          timestamp: new Date()
+        };
+        
+        const storedChats = localStorage.getItem('chatHistory');
+        let existingChats = [];
+        
+        if (storedChats) {
+          try {
+            existingChats = JSON.parse(storedChats);
+          } catch (e) {
+            console.error('Failed to parse stored chats:', e);
+          }
+        }
+        
+        // Add new chat to the list
+        const updatedChats = [newChat, ...existingChats];
+        localStorage.setItem('chatHistory', JSON.stringify(updatedChats));
+        
+        // Also save the messages for this chat
+        localStorage.setItem(`chat_${chatId}_messages`, JSON.stringify([
+          { id: uuidv4(), role: 'user', content, timestamp: new Date() },
+          { id: uuidv4(), role: 'assistant', content: fullText, timestamp: new Date() }
+        ]));
+        
+        // Dispatch custom event to notify other components
+        window.dispatchEvent(new CustomEvent('chatHistoryUpdated'));
+        
+        // Navigate to the chat page to continue the conversation
+        window.location.href = `/chat/${chatId}`;
+      }
     } catch (err) {
       console.error('Error sending message:', err);
       const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
@@ -108,26 +165,24 @@ export default function Home() {
         content: `Error: ${errorMessage}. Please try again later.`,
         timestamp: new Date(),
       }]);
-    } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col h-screen">
-      <header className="border-b border-[var(--border-color)] py-4 shadow-sm">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6">
-          <h1 className="text-xl font-semibold">Quantum Assistant</h1>
-        </div>
-      </header>
-      
-      <ChatWindow messages={messages} />
-      
-      {error && (
-        <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-3 text-sm max-w-3xl mx-auto my-2 rounded">
-          Error: {error}
-        </div>
-      )}
+    <div className="flex flex-col h-screen bg-[var(--chat-bg)]">
+      <div className={`flex-1 overflow-y-auto ${messages.length === 0 ? 'flex items-center justify-center' : ''}`}>
+        <ChatWindow 
+          messages={messages} 
+          onSendSuggestion={handleSendMessage}
+        />
+        
+        {error && (
+          <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-3 text-sm max-w-3xl mx-auto my-2 rounded">
+            Error: {error}
+          </div>
+        )}
+      </div>
       
       <ChatInput onSendMessage={handleSendMessage} isLoading={isLoading} />
     </div>
