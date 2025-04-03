@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Q-Qwen-Web
 
-## Getting Started
+A web application for interacting with the [Qwen2.5-0.5B-Quantum-Computing-Instruct](https://huggingface.co/ahmeterdempmk/Qwen2.5-0.5B-Quantum-Computing-Instruct) model, featuring a modern frontend and efficient backend architecture.
 
-First, run the development server:
+## Features
 
+- Modern and responsive web interface
+- Real-time communication with Qwen language models
+- Efficient backend API handling
+- Hot-reloading for development
+- Graceful server shutdown handling
+
+## Prerequisites
+
+- Node.js (v16 or higher)
+- Python 3.8 or higher
+- npm (Node Package Manager)
+- pip (Python Package Manager)
+
+## Installation
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/ahmeterdempmk/Q-Qwen-Web.git
+cd Q-Qwen-Web
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install frontend dependencies:
+```bash
+cd frontend
+npm install
+cd ..
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Install backend dependencies:
+```bash
+cd backend
+pip3 install -r requirements.txt
+cd ..
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Running the Application
 
-## Learn More
+1. Start both frontend and backend servers using the provided script:
+```bash
+./run.sh
+```
 
-To learn more about Next.js, take a look at the following resources:
+This will:
+- Start the backend server using uvicorn
+- Start the frontend development server
+- Enable hot-reloading for both servers
+- Handle graceful shutdown with Ctrl+C
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+2. Access the application:
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:8000
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Development
 
-## Deploy on Vercel
+- Frontend code is located in the `frontend/` directory
+- Backend code is located in the `backend/` directory
+- The `run.sh` script manages both servers and handles graceful shutdown
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## License
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is licensed under the terms specified in the LICENSE file.
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
