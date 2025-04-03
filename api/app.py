@@ -6,6 +6,7 @@ import asyncio
 import json
 import logging
 from typing import AsyncGenerator
+import os
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -104,4 +105,8 @@ async def health_check():
         "model_loaded": model is not None,
         "model_loading": model_loading,
         "model_error": model_error
-    } 
+    }
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=int(os.getenv("PORT", "8000"))) 
