@@ -9,12 +9,11 @@ trap cleanup SIGINT
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 echo "Starting backend server..."
-cd "$SCRIPT_DIR/backend"
+cd "$SCRIPT_DIR/api"
 uvicorn app:app --reload &
 BACKEND_PID=$!
 
 echo "Starting frontend server..."
-cd "$SCRIPT_DIR/frontend"
 npm run dev &
 FRONTEND_PID=$!
 
